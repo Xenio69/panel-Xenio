@@ -106,6 +106,83 @@
         ::-webkit-scrollbar-thumb { background: #2a3142; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #3d465c; }
 
+        /* LOGIN OVERLAY */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3,5,10,0.95);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s;
+        }
+        .login-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 28px;
+            padding: 40px;
+            width: 380px;
+            max-width: 90%;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+        .login-box h2 {
+            margin-bottom: 25px;
+            color: #fff;
+            font-size: 1.8rem;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .login-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(88,101,242,0.3);
+        }
+        .login-btn {
+            background: linear-gradient(135deg, var(--accent), #4340e0);
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+        .login-btn:hover {
+            box-shadow: 0 10px 25px rgba(88,101,242,0.4);
+            transform: translateY(-2px);
+        }
+        .login-error {
+            color: var(--rank-kierownik);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* MAIN APP */
+        .app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
         .sidebar {
             width: var(--sidebar-width);
             background: var(--bg-sidebar);
@@ -210,9 +287,14 @@
         .sidebar-footer {
             margin-top: auto;
             display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .user-info {
+            display: flex;
             align-items: center;
             gap: 12px;
-            padding: 16px;
+            padding: 12px;
             background: rgba(0,0,0,0.3);
             border-radius: 16px;
             border: 1px solid rgba(255,255,255,0.04);
@@ -220,16 +302,62 @@
         .status-dot {
             width: 10px;
             height: 10px;
-            background: #10ac84;
             border-radius: 50%;
-            box-shadow: 0 0 10px #10ac84;
-            animation: pulse 2s infinite;
         }
+        .status-dot.online { background: #10ac84; box-shadow: 0 0 10px #10ac84; animation: pulse 2s infinite; }
+        .status-dot.away { background: #feca57; box-shadow: 0 0 10px #feca57; }
+        .status-dot.dnd { background: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; }
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(16, 172, 132, 0.7); }
             70% { box-shadow: 0 0 0 8px rgba(16, 172, 132, 0); }
             100% { box-shadow: 0 0 0 0 rgba(16, 172, 132, 0); }
         }
+        .status-panel {
+            background: rgba(0,0,0,0.4);
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .status-panel select, .status-panel input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 8px;
+            color: #fff;
+            font-size: 0.8rem;
+            outline: none;
+            width: 100%;
+        }
+        .status-panel button {
+            background: var(--accent);
+            border: none;
+            padding: 8px;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .status-panel button:hover {
+            box-shadow: 0 4px 12px rgba(88,101,242,0.4);
+        }
+        .current-status {
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        .status-badge.czuwa { background: rgba(16,172,132,0.15); color: #10ac84; }
+        .status-badge.pingi { background: rgba(254,202,87,0.15); color: #feca57; }
+        .status-badge.niedostepny { background: rgba(255,77,77,0.15); color: #ff4d4d; }
 
         .menu-toggle {
             display: none;
@@ -339,6 +467,34 @@
             font-size: 2rem;
             color: var(--accent);
             margin-bottom: 8px;
+        }
+
+        /* Status list on home */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .status-row .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        .status-row .badge {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 20px;
         }
 
         .section-title {
@@ -754,6 +910,133 @@
             color: var(--rank-admin);
         }
 
+        /* PROPOSALS */
+        .proposal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .proposal-form textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+        .proposal-form textarea:focus {
+            border-color: var(--accent);
+        }
+        .proposal-form button {
+            align-self: flex-end;
+            background: var(--accent);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 14px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+        .proposal-form button:hover {
+            box-shadow: 0 8px 20px rgba(88,101,242,0.4);
+            transform: translateY(-2px);
+        }
+        .proposal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        .proposal-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 18px;
+            padding: 18px;
+            position: relative;
+            transition: 0.3s;
+        }
+        .proposal-item.kierownik { border-left: 4px solid var(--rank-kierownik); }
+        .proposal-item.admin { border-left: 4px solid var(--rank-admin); }
+        .proposal-item.mod { border-left: 4px solid var(--rank-mod); }
+        .proposal-item.helper { border-left: 4px solid var(--rank-helper); }
+        .proposal-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .proposal-author {
+            font-weight: 700;
+            color: #fff;
+        }
+        .proposal-content {
+            color: #d1d5db;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--rank-kierownik);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+            position: absolute;
+            top: 12px;
+            right: 16px;
+        }
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* RAPORTY */
+        .report-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .report-tab {
+            padding: 10px 20px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            color: var(--text-secondary);
+        }
+        .report-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .report-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+        .report-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+        .report-accused {
+            font-weight: 700;
+            color: #fff;
+        }
+
         @media (max-width: 1100px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -780,351 +1063,601 @@
 </div>
 <div class="grid-overlay"></div>
 
-<div class="menu-toggle" id="menuToggle">
-    <i class="fas fa-bars"></i>
+<!-- LOGIN SCREEN -->
+<div class="login-overlay" id="loginOverlay" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; justify-content: center; align-items: center; background: #03050a;">
+    <div class="login-box" style="background: #1a1a1a; padding: 20px; border-radius: 8px; text-align: center; color: white;">
+        <h2>🔐 Zaloguj się</h2>
+        <input type="text" id="loginUser" placeholder="Nick" style="display: block; margin: 10px auto; padding: 8px;">
+        <input type="password" id="loginPass" placeholder="Hasło" style="display: block; margin: 10px auto; padding: 8px;">
+        <button class="login-btn" onclick="login()" style="padding: 10px 20px; cursor: pointer;">Zaloguj się</button>
+        <p class="login-error" id="loginError" style="color: red; display: none; margin-top: 10px;">Nieprawidłowy nick lub hasło</p>
+    </div>
 </div>
 
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <div class="logo-icon">X</div>
-        <div class="logo-text">Xenio</div>
-    </div>
-    <ul class="nav-menu">
-        <li class="nav-item active" data-tab="home"><i class="fas fa-chart-pie"></i> Omówienie</li>
-        <li class="nav-item" data-tab="ekipa"><i class="fas fa-users"></i> Struktura Ekipy</li>
-        <li class="nav-item" data-tab="regulamin"><i class="fas fa-gavel"></i> Regulamin Ogólny</li>
-        <li class="nav-item" data-tab="taryfikator"><i class="fas fa-balance-scale"></i> Taryfikator Kar</li>
-        <li class="nav-item" data-tab="obowiazki"><i class="fas fa-clipboard-list"></i> Instrukcja Ekipy</li>
-    </ul>
-    <div class="sidebar-footer">
-        <div class="status-dot"></div>
-        <div>
-            <p style="font-size:0.8rem; font-weight:700;">System Online</p>
-            <p style="font-size:0.7rem; color:var(--text-secondary);">Rola: Administracja</p>
-        </div>
-    </div>
-</aside>
-
-<main class="main-content" id="mainContent">
-    <!-- Home Tab -->
-    <div id="home" class="tab-content active">
-        <div class="page-header">
-            <h1>Główny Panel Informacyjny</h1>
-            <p>Zintegrowane centrum operacyjne zarządzania strukturami i regulaminami projektu Xenio.</p>
-        </div>
-        <div class="panel-card" style="background: linear-gradient(135deg, rgba(88,101,242,0.1) 0%, rgba(0,0,0,0.3) 100%); border: 1px solid rgba(88,101,242,0.25);">
-            <h2 style="color:#fff;">Witaj w Systemie Zarządzania</h2>
-            <p style="color:#cbd5e1; max-width:800px;">Strona ta stanowi najwyższy zbiór instrukcji, wymagań rekrutacyjnych i ram postępowania dla pełnego składu administracyjnego. Dostęp do danych i taryfikatorów pozwala na zachowanie idealnego ładu i synchronizacji w zespole.</p>
-            <div class="stat-grid">
-                <div class="stat-card"><i class="fas fa-user-friends"></i><div class="num" data-count="300">0</div><p style="color:var(--text-secondary); font-weight:600;">Aktywna Społeczność</p></div>
-                <div class="stat-card"><i class="fas fa-sync-alt"></i><div class="num">✓</div><p style="color:var(--text-secondary); font-weight:600;">Zsynchronizowany Taryfikator</p></div>
-                <div class="stat-card"><i class="fas fa-shield-alt"></i><div class="num">✓</div><p style="color:var(--text-secondary); font-weight:600;">Zabezpieczona Struktura</p></div>
-            </div>
-        </div>
+<!-- MAIN APP (hidden until login) -->
+<div class="app-container" id="appContainer" style="display: none;">
+    <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
     </div>
 
-    <!-- Ekipa Tab -->
-    <div id="ekipa" class="tab-content">
-        <div class="page-header">
-            <h1>Struktura Organizacyjna</h1>
-            <p>Oficjalna hierarchia pionów decyzyjnych oraz podziału ról serwera Xenio.</p>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">X</div>
+            <div class="logo-text">Xenio</div>
         </div>
-        <div class="section-title">Właściciel Projektu</div>
-        <div class="team-center">
-            <div class="member-card card-kierownik" style="width:280px;">
-                <img class="avatar" src="https://cdn.discordapp.com/avatars/711584775055343706/b6e14a83a0122dc0b22a19300936f819.webp?size=1024" alt="Xenio">
-                <div class="member-name">Xenio</div>
-                <div class="role-badge">Kierownik / Twórca</div>
+        <ul class="nav-menu">
+            <li class="nav-item active" data-tab="home"><i class="fas fa-chart-pie"></i> Omówienie</li>
+            <li class="nav-item" data-tab="ekipa"><i class="fas fa-users"></i> Struktura Ekipy</li>
+            <li class="nav-item" data-tab="regulamin"><i class="fas fa-gavel"></i> Regulamin Ogólny</li>
+            <li class="nav-item" data-tab="taryfikator"><i class="fas fa-balance-scale"></i> Taryfikator Kar</li>
+            <li class="nav-item" data-tab="obowiazki"><i class="fas fa-clipboard-list"></i> Instrukcja Ekipy</li>
+            <li class="nav-item" data-tab="raporty"><i class="fas fa-flag"></i> Raporty</li>
+            <li class="nav-item" data-tab="propozycje"><i class="fas fa-lightbulb"></i> Propozycje</li>
+        </ul>
+        <div class="sidebar-footer" id="sidebarFooter">
+            <div class="user-info">
+                <div class="status-dot" id="statusDot"></div>
+                <div>
+                    <p style="font-size:0.8rem; font-weight:700;" id="loggedUserDisplay">Gość</p>
+                    <p style="font-size:0.7rem; color:var(--text-secondary);" id="loggedRoleDisplay">Niezalogowany</p>
+                    <div class="current-status" id="currentStatusText"></div>
+                </div>
             </div>
+            <div class="status-panel" id="statusPanel" style="display: none;">
+                <select id="statusType"><option value="czuwa">W czuwaniu</option><option value="pingi">Dostępny na pingi</option><option value="niedostepny">Niedostępny</option></select>
+                <input type="datetime-local" id="statusFrom" placeholder="Od">
+                <input type="datetime-local" id="statusTo" placeholder="Do">
+                <button onclick="saveStatus()">Zapisz</button>
+            </div>
+            <button onclick="toggleStatusPanel()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px; color: #fff; cursor: pointer; font-size: 0.8rem;">Ustaw status</button>
         </div>
-        <div class="section-title">Wyższa Administracja</div>
-        <div class="team-grid">
-            <div class="member-card card-admin">
-                <img class="avatar" src="https://cdn.discordapp.com/avatars/971381667107307580/f8d007a1d764bf4187ccb4384517541a.webp?size=1024" alt="Maggaistier">
-                <div class="member-name">Maggaistier</div>
-                <div class="role-badge">Head Admin</div>
-            </div>
-            <div class="member-card card-admin">
-                <img class="avatar" src="https://cdn.discordapp.com/avatars/1445522754836103229/621eedd0e15418f3d037d91767866e89.webp?size=1024" alt="Axyy_07">
-                <div class="member-name">Axyy_07</div>
-                <div class="role-badge">Admin</div>
-            </div>
-            <div class="member-card card-admin">
-                <img class="avatar" src="https://cdn.discordapp.com/avatars/786948237201375232/41786fdb725cee996971c0fda0d6fc0c.webp?size=1024" alt="Anielka">
-                <div class="member-name">Anielka</div>
-                <div class="role-badge">Admin</div>
-            </div>
-        </div>
-        <div class="section-title">Pion Moderacyjny</div>
-        <div class="team-center">
-            <div class="member-card card-mod" style="width:280px;">
-                <img class="avatar" src="https://cdn.discordapp.com/avatars/933668988150489088/1af3370a48b83f464caa7a88aa671553.webp?size=1024" alt="Wujaszek">
-                <div class="member-name">Wujaszek</div>
-                <div class="role-badge">Lead Moderator</div>
-            </div>
-        </div>
-        <div class="section-title">Pion Wsparcia (Helperzy)</div>
-        <div class="team-grid">
-            <div class="member-card card-helper">
-                <img class="avatar" src="https://cdn.discordapp.com/avatars/1392207721629220866/00e21901bf99e5eb720fb28fd8dda390.webp?size=1024" alt="Zetinek">
-                <div class="member-name">zetinek</div>
-                <div class="role-badge">Helper</div>
-            </div>
-            <div class="member-card card-helper">
-                <img class="avatar" src="https://cdn.discordapp.com/avatars/1110244319463477389/b949e58f12959a1066a3a2b2acc23ef2.webp?size=1024" alt="Barti0">
-                <div class="member-name">Barti0</div>
-                <div class="role-badge">Helper</div>
-            </div>
-            <div class="member-card card-helper">
-                <img class="avatar" src="https://vzge.me/face/128/db4a8fd93875442ca8146c81bc80e642.png" alt="SzymqPL">
-                <div class="member-name">szymqpl</div>
-                <div class="role-badge">Trial Helper</div>
-            </div>
-        </div>
-    </div>
+    </aside>
 
-    <!-- Regulamin Tab (NOWY UKŁAD) -->
-    <div id="regulamin" class="tab-content">
-        <div class="page-header">
-            <h1>Regulamin Główny Serwera</h1>
-            <p>Zbiór fundamentalnych praw i reguł zachowania obowiązujących społeczność Xenio.</p>
-        </div>
-        <div class="standards-grid">
-            <!-- Zasady Ogólne -->
-            <div class="standard-card expanded">
-                <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
-                    <div class="standard-icon"><i class="fas fa-shield-alt"></i></div>
-                    <div class="standard-title">Zasady Ogólne (§1-§6)</div>
-                    <i class="fas fa-chevron-down standard-arrow"></i>
-                </div>
-                <div class="standard-body">
-                    <ul>
-                        <li><span>§1.</span> Nieznajomość regulaminu nie zwalnia z obowiązku jego przestrzegania.</li>
-                        <li><span>§2.</span> Szanuj innych: zakaz rasizmu, mowy nienawiści oraz prowokowania zbędnych kłótni.</li>
-                        <li><span>§3.</span> Zakaz reklamowania innych serwerów, stron czy usług bez zgody administracji.</li>
-                        <li><span>§4.</span> Tickety służą do pomocy – zakaz tworzenia ich bez konkretnego powodu.</li>
-                        <li><span>§5.</span> Zakaz podszywania się pod członków administracji lub innych graczy.</li>
-                        <li><span>§6.</span> Bezwzględny zakaz udostępniania danych osobowych (doxing) bez zgody właściciela.</li>
-                    </ul>
+    <main class="main-content" id="mainContent">
+        <!-- Home Tab -->
+        <div id="home" class="tab-content active">
+            <div class="page-header">
+                <h1>Główny Panel Informacyjny</h1>
+                <p>Zintegrowane centrum operacyjne zarządzania strukturami i regulaminami projektu Xenio.</p>
+            </div>
+            <div class="panel-card" style="background: linear-gradient(135deg, rgba(88,101,242,0.1) 0%, rgba(0,0,0,0.3) 100%); border: 1px solid rgba(88,101,242,0.25);">
+                <h2 style="color:#fff;">Witaj, <span id="welcomeUser">użytkowniku</span>!</h2>
+                <p style="color:#cbd5e1; max-width:800px;">Strona ta stanowi najwyższy zbiór instrukcji, wymagań rekrutacyjnych i ram postępowania dla pełnego składu administracyjnego. Dostęp do danych i taryfikatorów pozwala na zachowanie idealnego ładu i synchronizacji w zespole.</p>
+                <div class="stat-grid">
+                    <div class="stat-card"><i class="fas fa-user-friends"></i><div class="num" data-count="300">0</div><p style="color:var(--text-secondary); font-weight:600;">Aktywna Społeczność</p></div>
+                    <div class="stat-card"><i class="fas fa-sync-alt"></i><div class="num">✓</div><p style="color:var(--text-secondary); font-weight:600;">Zsynchronizowany Taryfikator</p></div>
+                    <div class="stat-card"><i class="fas fa-shield-alt"></i><div class="num">✓</div><p style="color:var(--text-secondary); font-weight:600;">Zabezpieczona Struktura</p></div>
                 </div>
             </div>
-            <!-- Kanały Tekstowe -->
-            <div class="standard-card">
-                <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
-                    <div class="standard-icon"><i class="fas fa-comment-dots"></i></div>
-                    <div class="standard-title">Kanały Tekstowe (§7-§11)</div>
-                    <i class="fas fa-chevron-down standard-arrow"></i>
-                </div>
-                <div class="standard-body">
-                    <ul>
-                        <li><span>§7.</span> Zachowaj kulturę: ogranicz nadużywanie przekleństw i wyzwisk.</li>
-                        <li><span>§8.</span> Zakaz spamu, floodu oraz wysyłania tzw. „łańcuszków”.</li>
-                        <li><span>§9.</span> Zakaz nadmiernego oznaczania użytkowników oraz administracji.</li>
-                        <li><span>§10.</span> Korzystaj z kanałów zgodnie z ich przeznaczeniem (np. komendy ekonomii tylko na kanale do tego wyznaczonym).</li>
-                        <li><span>§11.</span> Ekonomia: Surowy zakaz tworzenia multikont w celu przelewania gotówki/XenioCoin.</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- Kanały Głosowe -->
-            <div class="standard-card">
-                <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
-                    <div class="standard-icon"><i class="fas fa-microphone-alt"></i></div>
-                    <div class="standard-title">Kanały Głosowe (§12-§14)</div>
-                    <i class="fas fa-chevron-down standard-arrow"></i>
-                </div>
-                <div class="standard-body">
-                    <ul>
-                        <li><span>§12.</span> Zakaz puszczania bindów, krzyczenia oraz celowego przesterowywania mikrofonu.</li>
-                        <li><span>§13.</span> Streamowanie treści +18, drastycznych lub niestosownych jest surowo zabronione.</li>
-                        <li><span>§14.</span> Na kanałach prywatnych zasady są luźniejsze, o ile nie przeszkadza to innym użytkownikom serwera.</li>
-                    </ul>
+            <!-- SEKCJA STATUSÓW EKIPY -->
+            <div class="panel-card">
+                <h2><i class="fas fa-signal"></i> Statusy Ekipy</h2>
+                <div class="status-list" id="homeStatusList">
+                    <!-- dynamiczne -->
                 </div>
             </div>
         </div>
-        <div class="info-box">
-            <p style="font-weight:700;">Ważne Aspekty Prawne Społeczności Xenia:</p>
-            <p>• Administracja zastrzega sobie prawo do zmiany regulaminu w dowolnym momencie.</p>
-            <p>• W sytuacjach nieujętych w regulaminie ostateczny głos należy do administracji.</p>
-            <p>• Nieznajomość zasad = brak taryfy ulgowej.</p>
-        </div>
-    </div>
 
-    <!-- Taryfikator Tab (POPRAWIONE KARY) -->
-    <div id="taryfikator" class="tab-content">
-        <div class="page-header">
-            <h1>System Wymierzania Kar</h1>
-            <p>Sztywny, nadrzędny dokument określający dokładny czas trwania blokad.</p>
-        </div>
-        <div class="panel-card">
-            <div class="table-container">
-                <table id="penaltyTable">
-                    <thead>
-                    <tr>
-                        <th data-sort="string">Naruszenie <i class="fas fa-sort"></i></th>
-                        <th data-sort="string">Pierwsza Infrakcja <i class="fas fa-sort"></i></th>
-                        <th data-sort="string">Druga Infrakcja <i class="fas fa-sort"></i></th>
-                        <th data-sort="string">Kolejne Naruszenia <i class="fas fa-sort"></i></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr><td>Spam / Flood</td><td>10 min</td><td>30 min</td><td>1h</td></tr>
-                    <tr><td>Wulgaryzmy</td><td>15 min</td><td>1h</td><td>6h</td></tr>
-                    <tr><td>Obraza użytkownika</td><td>30 min</td><td>3h</td><td>24h</td></tr>
-                    <tr><td>Toksyczne zachowanie</td><td>1h</td><td>6h</td><td>3 dni</td></tr>
-                    <tr><td>Prowokowanie</td><td>30 min</td><td>2h</td><td>12h</td></tr>
-                    <tr><td>Reklamowanie (inne serwery)</td><td class="badge-ban">BAN</td><td>-</td><td>-</td></tr>
-                    <tr><td>Brak kultury wobec Admina</td><td>2h</td><td>12h</td><td>7 dni</td></tr>
-                    <tr><td>Wymuszanie kary</td><td style="color:var(--rank-kierownik); font-weight:700;">24h</td><td style="color:var(--rank-kierownik); font-weight:700;">3 dni</td><td style="color:var(--rank-kierownik); font-weight:700;">7 dni</td></tr>
-                    </tbody>
-                </table>
+        <!-- Ekipa Tab -->
+        <div id="ekipa" class="tab-content">
+            <div class="page-header">
+                <h1>Struktura Organizacyjna</h1>
+                <p>Oficjalna hierarchia pionów decyzyjnych oraz podziału ról serwera Xenio.</p>
+            </div>
+            <div class="section-title">Właściciel Projektu</div>
+            <div class="team-center">
+                <div class="member-card card-kierownik" style="width:280px;">
+                    <img class="avatar" src="https://cdn.discordapp.com/avatars/711584775055343706/b6e14a83a0122dc0b22a19300936f819.webp?size=1024" alt="Xenio">
+                    <div class="member-name">Xenio</div>
+                    <div class="role-badge">Kierownik / Twórca</div>
+                </div>
+            </div>
+            <div class="section-title">Wyższa Administracja</div>
+            <div class="team-grid">
+                <div class="member-card card-admin">
+                    <img class="avatar" src="https://cdn.discordapp.com/avatars/971381667107307580/f8d007a1d764bf4187ccb4384517541a.webp?size=1024" alt="Maggaistier">
+                    <div class="member-name">Maggaistier</div>
+                    <div class="role-badge">Head Admin</div>
+                </div>
+                <div class="member-card card-admin">
+                    <img class="avatar" src="https://cdn.discordapp.com/avatars/1445522754836103229/621eedd0e15418f3d037d91767866e89.webp?size=1024" alt="Axyy_07">
+                    <div class="member-name">Axyy_07</div>
+                    <div class="role-badge">Admin</div>
+                </div>
+                <div class="member-card card-admin">
+                    <img class="avatar" src="https://cdn.discordapp.com/avatars/786948237201375232/41786fdb725cee996971c0fda0d6fc0c.webp?size=1024" alt="Anielka">
+                    <div class="member-name">Anielka</div>
+                    <div class="role-badge">Admin</div>
+                </div>
+            </div>
+            <div class="section-title">Pion Moderacyjny</div>
+            <div class="team-center">
+                <div class="member-card card-mod" style="width:280px;">
+                    <img class="avatar" src="https://cdn.discordapp.com/avatars/933668988150489088/1af3370a48b83f464caa7a88aa671553.webp?size=1024" alt="Wujaszek">
+                    <div class="member-name">Wujaszek</div>
+                    <div class="role-badge">Lead Moderator</div>
+                </div>
+            </div>
+            <div class="section-title">Pion Wsparcia (Helperzy)</div>
+            <div class="team-grid">
+                <div class="member-card card-helper">
+                    <img class="avatar" src="https://cdn.discordapp.com/avatars/1392207721629220866/00e21901bf99e5eb720fb28fd8dda390.webp?size=1024" alt="Zetinek">
+                    <div class="member-name">zetinek</div>
+                    <div class="role-badge">Helper</div>
+                </div>
+                <div class="member-card card-helper">
+                    <img class="avatar" src="https://cdn.discordapp.com/avatars/1110244319463477389/b949e58f12959a1066a3a2b2acc23ef2.webp?size=1024" alt="Barti0">
+                    <div class="member-name">Barti0</div>
+                    <div class="role-badge">Helper</div>
+                </div>
+                <div class="member-card card-helper">
+                    <img class="avatar" src="https://vzge.me/face/128/db4a8fd93875442ca8146c81bc80e642.png" alt="SzymqPL">
+                    <div class="member-name">szymqpl</div>
+                    <div class="role-badge">Trial Helper</div>
+                </div>
             </div>
         </div>
-        <div class="critical-box">
-            <p style="text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">⚠️ PROTOKÓŁ WYMUSZANIA KAR:</p>
-            <p style="color:#f3f4f6;">W przypadku graczy, którzy intencjonalnie naruszają regulamin deklarując chęć otrzymania kary, stosujemy bezwzględne odcięcie na 24 godziny. Drugie naruszenie skutkuje karą 3 dni, a trzecie – 7 dni wyciszenia.</p>
-        </div>
-    </div>
 
-    <!-- Obowiązki Tab (BEZ ZMIAN) -->
-    <div id="obowiazki" class="tab-content">
-        <div class="page-header">
-            <h1>Centrum Operacyjne Zespołu</h1>
-            <p>Interaktywny podział obowiązków, standardów i wytycznych dla administracji Xenio.</p>
-        </div>
-        <div class="ob-section-title">
-            <i class="fas fa-gem"></i> Fundamenty Administracji
-        </div>
-        <div class="panel-card fundamenty-card">
-            <div class="fundamenty-grid">
-                <div class="fundament-item">
-                    <div class="fundament-num">01</div>
-                    <div class="fundament-text">
-                        <strong>Sztywne kary</strong>
-                        <p>Stosujemy zawsze w formie zapisanej w taryfikatorze. Brak stopniowania i taryfy ulgowej.</p>
+        <!-- Regulamin Tab (NOWY UKŁAD) -->
+        <div id="regulamin" class="tab-content">
+            <div class="page-header">
+                <h1>Regulamin Główny Serwera</h1>
+                <p>Zbiór fundamentalnych praw i reguł zachowania obowiązujących społeczność Xenio.</p>
+            </div>
+            <div class="standards-grid">
+                <div class="standard-card expanded">
+                    <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="standard-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="standard-title">Zasady Ogólne (§1-§6)</div>
+                        <i class="fas fa-chevron-down standard-arrow"></i>
+                    </div>
+                    <div class="standard-body">
+                        <ul>
+                            <li><span>§1.</span> Nieznajomość regulaminu nie zwalnia z obowiązku jego przestrzegania.</li>
+                            <li><span>§2.</span> Szanuj innych: zakaz rasizmu, mowy nienawiści oraz prowokowania zbędnych kłótni.</li>
+                            <li><span>§3.</span> Zakaz reklamowania innych serwerów, stron czy usług bez zgody administracji.</li>
+                            <li><span>§4.</span> Tickety służą do pomocy – zakaz tworzenia ich bez konkretnego powodu.</li>
+                            <li><span>§5.</span> Zakaz podszywania się pod członków administracji lub innych graczy.</li>
+                            <li><span>§6.</span> Bezwzględny zakaz udostępniania danych osobowych (doxing) bez zgody właściciela.</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="fundament-item">
-                    <div class="fundament-num">02</div>
-                    <div class="fundament-text">
-                        <strong>Uprawnienia do Banowania</strong>
-                        <p>Każdy przypadek bana moderatorzy zgłaszają bezpośrednio do Xenio.</p>
+                <div class="standard-card">
+                    <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="standard-icon"><i class="fas fa-comment-dots"></i></div>
+                        <div class="standard-title">Kanały Tekstowe (§7-§11)</div>
+                        <i class="fas fa-chevron-down standard-arrow"></i>
+                    </div>
+                    <div class="standard-body">
+                        <ul>
+                            <li><span>§7.</span> Zachowaj kulturę: ogranicz nadużywanie przekleństw i wyzwisk.</li>
+                            <li><span>§8.</span> Zakaz spamu, floodu oraz wysyłania tzw. „łańcuszków”.</li>
+                            <li><span>§9.</span> Zakaz nadmiernego oznaczania użytkowników oraz administracji.</li>
+                            <li><span>§10.</span> Korzystaj z kanałów zgodnie z ich przeznaczeniem (np. komendy ekonomii tylko na kanale do tego wyznaczonym).</li>
+                            <li><span>§11.</span> Ekonomia: Surowy zakaz tworzenia multikont w celu przelewania gotówki/XenioCoin.</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="fundament-item">
-                    <div class="fundament-num">03</div>
-                    <div class="fundament-text">
-                        <strong>Kto nadaje bany</strong>
-                        <p>Wyłącznie <strong>Xenio</strong>. Nikt inny nie ma prawa banować użytkowników.</p>
+                <div class="standard-card">
+                    <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="standard-icon"><i class="fas fa-microphone-alt"></i></div>
+                        <div class="standard-title">Kanały Głosowe (§12-§14)</div>
+                        <i class="fas fa-chevron-down standard-arrow"></i>
                     </div>
-                </div>
-                <div class="fundament-item">
-                    <div class="fundament-num">04</div>
-                    <div class="fundament-text">
-                        <strong>Zasada rozwoju</strong>
-                        <p>System obowiązuje do odwołania, z możliwością aktualizacji wraz ze wzrostem serwera.</p>
+                    <div class="standard-body">
+                        <ul>
+                            <li><span>§12.</span> Zakaz puszczania bindów, krzyczenia oraz celowego przesterowywania mikrofonu.</li>
+                            <li><span>§13.</span> Streamowanie treści +18, drastycznych lub niestosownych jest surowo zabronione.</li>
+                            <li><span>§14.</span> Na kanałach prywatnych zasady są luźniejsze, o ile nie przeszkadza to innym użytkownikom serwera.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="ob-section-title">
-            <i class="fas fa-cogs"></i> Standardy Operacyjne
-        </div>
-        <div class="standards-grid">
-            <div class="standard-card">
-                <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
-                    <div class="standard-icon"><i class="fas fa-ticket-alt"></i></div>
-                    <div class="standard-title">System Ticketów</div>
-                    <i class="fas fa-chevron-down standard-arrow"></i>
-                </div>
-                <div class="standard-body">
-                    <ul>
-                        <li><span>Pierwsza linia:</span> Helperzy obsługują wszystkie przychodzące zgłoszenia.</li>
-                        <li><span>Eskalacja:</span> Administratorzy i Moderatorzy nie ingerują w tickety, chyba że Helper poprosi o pomoc.</li>
-                        <li><span>Samodzielność:</span> Helperze – Twoim zadaniem jest rozwiązywanie problemów graczy.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="standard-card">
-                <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
-                    <div class="standard-icon"><i class="fas fa-microphone"></i></div>
-                    <div class="standard-title">Kanały Głosowe</div>
-                    <i class="fas fa-chevron-down standard-arrow"></i>
-                </div>
-                <div class="standard-body">
-                    <ul>
-                        <li><span>Zakaz ingerencji:</span> Nie wchodzimy na pełne kanały bez wyraźnej potrzeby służbowej.</li>
-                        <li><span>Zakaz przerzucania:</span> Kategorycznie zabrania się przerzucania użytkowników między kanałami bez ich zgody.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="standard-card">
-                <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
-                    <div class="standard-icon"><i class="fas fa-heart"></i></div>
-                    <div class="standard-title">Etyka i Postawa</div>
-                    <i class="fas fa-chevron-down standard-arrow"></i>
-                </div>
-                <div class="standard-body">
-                    <ul>
-                        <li><span>Bezstronność:</span> Podczas służby nie macie znajomych. Taryfikator jest nadrzędny.</li>
-                        <li><span>Profesjonalizm:</span> Wasze wypowiedzi mają być merytoryczne i opanowane.</li>
-                        <li><span>Użycie /mute:</span> Narzędzie do utrzymania porządku, a nie manifestacji władzy.</li>
-                    </ul>
-                </div>
+            <div class="info-box">
+                <p style="font-weight:700;">Ważne Aspekty Prawne Społeczności Xenia:</p>
+                <p>• Administracja zastrzega sobie prawo do zmiany regulaminu w dowolnym momencie.</p>
+                <p>• W sytuacjach nieujętych w regulaminie ostateczny głos należy do administracji.</p>
+                <p>• Nieznajomość zasad = brak taryfy ulgowej.</p>
             </div>
         </div>
 
-        <div class="ob-section-title">
-            <i class="fas fa-user-shield"></i> Obowiązki według Ról
+        <!-- Taryfikator Tab (POPRAWIONE KARY) -->
+        <div id="taryfikator" class="tab-content">
+            <div class="page-header">
+                <h1>System Wymierzania Kar</h1>
+                <p>Sztywny, nadrzędny dokument określający dokładny czas trwania blokad.</p>
+            </div>
+            <div class="panel-card">
+                <div class="table-container">
+                    <table id="penaltyTable">
+                        <thead>
+                        <tr>
+                            <th data-sort="string">Naruszenie <i class="fas fa-sort"></i></th>
+                            <th data-sort="string">Pierwsza Infrakcja <i class="fas fa-sort"></i></th>
+                            <th data-sort="string">Druga Infrakcja <i class="fas fa-sort"></i></th>
+                            <th data-sort="string">Kolejne Naruszenia <i class="fas fa-sort"></i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>Spam / Flood</td><td>10 min</td><td>30 min</td><td>1h</td></tr>
+                        <tr><td>Wulgaryzmy</td><td>15 min</td><td>1h</td><td>6h</td></tr>
+                        <tr><td>Obraza użytkownika</td><td>30 min</td><td>3h</td><td>24h</td></tr>
+                        <tr><td>Toksyczne zachowanie</td><td>1h</td><td>6h</td><td>3 dni</td></tr>
+                        <tr><td>Prowokowanie</td><td>30 min</td><td>2h</td><td>12h</td></tr>
+                        <tr><td>Reklamowanie (inne serwery)</td><td class="badge-ban">BAN</td><td>-</td><td>-</td></tr>
+                        <tr><td>Brak kultury wobec Admina</td><td>2h</td><td>12h</td><td>7 dni</td></tr>
+                        <tr><td>Wymuszanie kary</td><td style="color:var(--rank-kierownik); font-weight:700;">24h</td><td style="color:var(--rank-kierownik); font-weight:700;">3 dni</td><td style="color:var(--rank-kierownik); font-weight:700;">7 dni</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="critical-box">
+                <p style="text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">⚠️ PROTOKÓŁ WYMUSZANIA KAR:</p>
+                <p style="color:#f3f4f6;">W przypadku graczy, którzy intencjonalnie naruszają regulamin deklarując chęć otrzymania kary, stosujemy bezwzględne odcięcie na 24 godziny. Drugie naruszenie skutkuje karą 3 dni, a trzecie – 7 dni wyciszenia.</p>
+            </div>
         </div>
-        <div class="role-switcher">
-            <button id="btnAdmin" class="role-btn active" onclick="switchRole('admin')">
-                <i class="fas fa-crown"></i> Administrator
-            </button>
-            <button id="btnHelper" class="role-btn" onclick="switchRole('helper')">
-                <i class="fas fa-hands-helping"></i> Helper
-            </button>
-        </div>
-        <div class="role-content" id="roleAdmin">
-            <div class="panel-card role-card">
-                <h2><i class="fas fa-star" style="color: var(--rank-admin);"></i> Zakres obowiązków Administratora</h2>
-                <div class="role-list">
-                    <div class="role-item"><span>01</span> Weryfikacja poprawności kar nakładanych przez Helperów oraz egzekwowanie przestrzegania taryfikatora przez niższe rangi.</div>
-                    <div class="role-item"><span>02</span> Monitorowanie kanału <code>#administracja</code> pod kątem prawidłowości użycia komendy /mute.</div>
-                    <div class="role-item"><span>03</span> Wstępna analiza zgłoszeń na kanale <code>#raporty-ban</code> przed przekazaniem ich do Właściciela. Zapewnienie kompletności materiału dowodowego.</div>
-                    <div class="role-item"><span>04</span> Rozpatrywanie ticketów zgodnie z wytycznymi serwerowymi i reagowanie na sytuacje sporne, z którymi nie poradzili sobie Helperzy.</div>
-                    <div class="role-item"><span>05</span> Zachowanie pełnego profesjonalizmu; Administrator nie wchodzi w dyskusje z graczami poza wyznaczonymi kanałami.</div>
-                    <div class="role-item"><span>06</span> Obowiązek informowania Właściciela o wszelkich nieprawidłowościach w pracy zespołu oraz zgłaszanie błędów technicznych.</div>
-                    <div class="role-item"><span>07</span> Bezwzględna bezstronność. Brak faworyzowania użytkowników. Reprezentowanie najwyższych standardów kultury osobistej.</div>
-                    <div class="role-item highlight"><span>08</span> <strong>Administratorowi nie wolno zmieniać wymiaru kar określonych w taryfikatorze bez uprzedniej zgody Właściciela.</strong></div>
+
+        <!-- Obowiązki Tab -->
+        <div id="obowiazki" class="tab-content">
+            <div class="page-header">
+                <h1>Centrum Operacyjne Zespołu</h1>
+                <p>Interaktywny podział obowiązków, standardów i wytycznych dla administracji Xenio.</p>
+            </div>
+            <div class="ob-section-title">
+                <i class="fas fa-gem"></i> Fundamenty Administracji
+            </div>
+            <div class="panel-card fundamenty-card">
+                <div class="fundamenty-grid">
+                    <div class="fundament-item">
+                        <div class="fundament-num">01</div>
+                        <div class="fundament-text">
+                            <strong>Sztywne kary</strong>
+                            <p>Stosujemy zawsze w formie zapisanej w taryfikatorze. Brak stopniowania i taryfy ulgowej.</p>
+                        </div>
+                    </div>
+                    <div class="fundament-item">
+                        <div class="fundament-num">02</div>
+                        <div class="fundament-text">
+                            <strong>Uprawnienia do Banowania</strong>
+                            <p>Każdy przypadek bana moderatorzy zgłaszają bezpośrednio do Xenio.</p>
+                        </div>
+                    </div>
+                    <div class="fundament-item">
+                        <div class="fundament-num">03</div>
+                        <div class="fundament-text">
+                            <strong>Kto nadaje bany</strong>
+                            <p>Wyłącznie <strong>Xenio</strong>. Nikt inny nie ma prawa banować użytkowników.</p>
+                        </div>
+                    </div>
+                    <div class="fundament-item">
+                        <div class="fundament-num">04</div>
+                        <div class="fundament-text">
+                            <strong>Zasada rozwoju</strong>
+                            <p>System obowiązuje do odwołania, z możliwością aktualizacji wraz ze wzrostem serwera.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ob-section-title">
+                <i class="fas fa-cogs"></i> Standardy Operacyjne
+            </div>
+            <div class="standards-grid">
+                <div class="standard-card">
+                    <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="standard-icon"><i class="fas fa-ticket-alt"></i></div>
+                        <div class="standard-title">System Ticketów</div>
+                        <i class="fas fa-chevron-down standard-arrow"></i>
+                    </div>
+                    <div class="standard-body">
+                        <ul>
+                            <li><span>Pierwsza linia:</span> Helperzy obsługują wszystkie przychodzące zgłoszenia.</li>
+                            <li><span>Eskalacja:</span> Administratorzy i Moderatorzy nie ingerują w tickety, chyba że Helper poprosi o pomoc.</li>
+                            <li><span>Samodzielność:</span> Helperze – Twoim zadaniem jest rozwiązywanie problemów graczy.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="standard-card">
+                    <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="standard-icon"><i class="fas fa-microphone"></i></div>
+                        <div class="standard-title">Kanały Głosowe</div>
+                        <i class="fas fa-chevron-down standard-arrow"></i>
+                    </div>
+                    <div class="standard-body">
+                        <ul>
+                            <li><span>Zakaz ingerencji:</span> Nie wchodzimy na pełne kanały bez wyraźnej potrzeby służbowej.</li>
+                            <li><span>Zakaz przerzucania:</span> Kategorycznie zabrania się przerzucania użytkowników między kanałami bez ich zgody.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="standard-card">
+                    <div class="standard-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="standard-icon"><i class="fas fa-heart"></i></div>
+                        <div class="standard-title">Etyka i Postawa</div>
+                        <i class="fas fa-chevron-down standard-arrow"></i>
+                    </div>
+                    <div class="standard-body">
+                        <ul>
+                            <li><span>Bezstronność:</span> Podczas służby nie macie znajomych. Taryfikator jest nadrzędny.</li>
+                            <li><span>Profesjonalizm:</span> Wasze wypowiedzi mają być merytoryczne i opanowane.</li>
+                            <li><span>Użycie /mute:</span> Narzędzie do utrzymania porządku, a nie manifestacji władzy.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ob-section-title">
+                <i class="fas fa-user-shield"></i> Obowiązki według Ról
+            </div>
+            <div class="role-switcher">
+                <button id="btnAdmin" class="role-btn active" onclick="switchRole('admin')">
+                    <i class="fas fa-crown"></i> Administrator
+                </button>
+                <button id="btnHelper" class="role-btn" onclick="switchRole('helper')">
+                    <i class="fas fa-hands-helping"></i> Helper
+                </button>
+            </div>
+            <div class="role-content" id="roleAdmin">
+                <div class="panel-card role-card">
+                    <h2><i class="fas fa-star" style="color: var(--rank-admin);"></i> Zakres obowiązków Administratora</h2>
+                    <div class="role-list">
+                        <div class="role-item"><span>01</span> Weryfikacja poprawności kar nakładanych przez Helperów oraz egzekwowanie przestrzegania taryfikatora przez niższe rangi.</div>
+                        <div class="role-item"><span>02</span> Monitorowanie kanału <code>#administracja</code> pod kątem prawidłowości użycia komendy /mute.</div>
+                        <div class="role-item"><span>03</span> Wstępna analiza zgłoszeń na kanale <code>#raporty-ban</code> przed przekazaniem ich do Właściciela. Zapewnienie kompletności materiału dowodowego.</div>
+                        <div class="role-item"><span>04</span> Rozpatrywanie ticketów zgodnie z wytycznymi serwerowymi i reagowanie na sytuacje sporne, z którymi nie poradzili sobie Helperzy.</div>
+                        <div class="role-item"><span>05</span> Zachowanie pełnego profesjonalizmu; Administrator nie wchodzi w dyskusje z graczami poza wyznaczonymi kanałami.</div>
+                        <div class="role-item"><span>06</span> Obowiązek informowania Właściciela o wszelkich nieprawidłowościach w pracy zespołu oraz zgłaszanie błędów technicznych.</div>
+                        <div class="role-item"><span>07</span> Bezwzględna bezstronność. Brak faworyzowania użytkowników. Reprezentowanie najwyższych standardów kultury osobistej.</div>
+                        <div class="role-item highlight"><span>08</span> <strong>Administratorowi nie wolno zmieniać wymiaru kar określonych w taryfikatorze bez uprzedniej zgody Właściciela.</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="role-content" id="roleHelper" style="display: none;">
+                <div class="panel-card role-card">
+                    <h2><i class="fas fa-star" style="color: var(--rank-helper);"></i> Zakres obowiązków Helpera</h2>
+                    <div class="role-list">
+                        <div class="role-item"><span>01</span> Stałe monitorowanie czatu oraz kanałów głosowych pod kątem łamania regulaminu. Obowiązek natychmiastowej reakcji.</div>
+                        <div class="role-item"><span>02</span> Bezwzględne przestrzeganie taryfikatora – brak prawa do samodzielnego modyfikowania długości kar.</div>
+                        <div class="role-item"><span>03</span> Wykorzystywanie komendy /mute wyłącznie na kanale <code>#administracja</code>. Każda kara musi zawierać pełny powód.</div>
+                        <div class="role-item"><span>04</span> Helper nie posiada uprawnień do banowania użytkowników. Każde wykroczenie wymagające bana musi zostać opisane na kanale <code>#chat</code> (administracyjny) z kompletem dowodów.</div>
+                        <div class="role-item"><span>05</span> Zakaz prowadzenia dyskusji z graczami na kanałach publicznych. Każda wątpliwość gracza musi zostać przekierowana do systemu Ticketów.</div>
+                        <div class="role-item"><span>06</span> Bezwzględna lojalność wobec regulaminu. Brak stosowania taryfikatora równa się z niekompetencją.</div>
+                        <div class="role-item highlight"><span>07</span> <strong>Obowiązek raportowania Administratorowi wszelkich sytuacji, w których Helper nie jest w stanie samodzielnie podjąć decyzji.</strong></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="role-content" id="roleHelper" style="display: none;">
-            <div class="panel-card role-card">
-                <h2><i class="fas fa-star" style="color: var(--rank-helper);"></i> Zakres obowiązków Helpera</h2>
-                <div class="role-list">
-                    <div class="role-item"><span>01</span> Stałe monitorowanie czatu oraz kanałów głosowych pod kątem łamania regulaminu. Obowiązek natychmiastowej reakcji.</div>
-                    <div class="role-item"><span>02</span> Bezwzględne przestrzeganie taryfikatora – brak prawa do samodzielnego modyfikowania długości kar.</div>
-                    <div class="role-item"><span>03</span> Wykorzystywanie komendy /mute wyłącznie na kanale <code>#administracja</code>. Każda kara musi zawierać pełny powód.</div>
-                    <div class="role-item"><span>04</span> Helper nie posiada uprawnień do banowania użytkowników. Każde wykroczenie wymagające bana musi zostać opisane na kanale <code>#chat</code> (administracyjny) z kompletem dowodów.</div>
-                    <div class="role-item"><span>05</span> Zakaz prowadzenia dyskusji z graczami na kanałach publicznych. Każda wątpliwość gracza musi zostać przekierowana do systemu Ticketów.</div>
-                    <div class="role-item"><span>06</span> Bezwzględna lojalność wobec regulaminu. Brak stosowania taryfikatora równa się z niekompetencją.</div>
-                    <div class="role-item highlight"><span>07</span> <strong>Obowiązek raportowania Administratorowi wszelkich sytuacji, w których Helper nie jest w stanie samodzielnie podjąć decyzji.</strong></div>
+
+        <!-- RAPORTY TAB -->
+        <div id="raporty" class="tab-content">
+            <div class="page-header">
+                <h1>Raporty</h1>
+                <p>Zgłaszaj incydenty – raporty przypisane są do Twojego nicku.</p>
+            </div>
+            <div class="panel-card">
+                <h2>Nowy raport</h2>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <input type="text" id="reportAccused" placeholder="Nick sprawcy" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: #fff;">
+                    <select id="reportCategory" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: #fff;">
+                        <option value="spam">Spam</option><option value="wulgaryzmy">Wulgaryzmy</option><option value="reklama">Reklama</option><option value="toksycznosc">Toksyczność</option><option value="inne">Inne</option>
+                    </select>
+                    <textarea id="reportDesc" rows="3" placeholder="Opis sytuacji" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: #fff; resize: vertical;"></textarea>
+                    <button onclick="submitReport()" style="align-self: flex-end; background: var(--accent); border: none; padding: 12px 30px; border-radius: 14px; color: #fff; font-weight: 700; cursor: pointer;">Wyślij raport</button>
+                </div>
+            </div>
+            <div class="panel-card">
+                <h2>Zgłoszone raporty</h2>
+                <div class="report-tabs" id="reportTabs"></div>
+                <div id="reportList"></div>
+            </div>
+        </div>
+
+        <!-- PROPOZYCJE TAB -->
+        <div id="propozycje" class="tab-content">
+            <div class="page-header">
+                <h1>Propozycje społeczności</h1>
+                <p>Każdy zalogowany członek ekipy może dodać swoją propozycję. Kolor tła zależy od Twojej rangi.</p>
+            </div>
+            <div class="panel-card">
+                <h2>Dodaj propozycję</h2>
+                <div class="proposal-form">
+                    <textarea id="proposalInput" rows="3" placeholder="Wpisz swoją propozycję..."></textarea>
+                    <button onclick="addProposal()"><i class="fas fa-paper-plane"></i> Wyślij</button>
+                </div>
+            </div>
+            <div class="panel-card">
+                <h2>Zgłoszone propozycje</h2>
+                <div class="proposal-list" id="proposalList">
+                    <!-- dynamiczne -->
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
+</div>
 
 <script>
     (function() {
+        // ========== USER DATABASE ==========
+        const users = {
+            "Xenio": { pass: "f23e98bnjmysdfgfre3c3", role: "kierownik" },
+            "Maggaistier": { pass: "2t98mbynsefwdo08", role: "admin" },
+            "Axyy_07": { pass: "f3r09knuhwdge4r", role: "admin" },
+            "Anielka": { pass: "gv30re435y4esdfgg345", role: "admin" },
+            "Wujaszek": { pass: "fg309rehuj0w3hjsdf", role: "mod" },
+            "Zetinek": { pass: "0v89ebhr3yg340tdf", role: "helper" },
+            "Barti0": { pass: "23wg9eumhs9d08fjds43", role: "helper" },
+            "SzymqPL": { pass: "903gmrj79jsdfhufgsd0u", role: "helper" }
+        };
+
+        let currentUser = null;
+        let proposals = JSON.parse(localStorage.getItem('xenioProposals') || '[]');
+        let reports = JSON.parse(localStorage.getItem('xenioReports') || '[]');
+        let statuses = JSON.parse(localStorage.getItem('xenioStatuses') || '{}');
+
+        // ========== LOGIN ==========
+        window.login = function() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const error = document.getElementById('loginError');
+
+            if (users[user] && users[user].pass === pass) {
+                currentUser = { nick: user, role: users[user].role };
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'flex';
+                document.getElementById('loggedUserDisplay').innerText = currentUser.nick;
+                document.getElementById('loggedRoleDisplay').innerText = 'Rola: ' + currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+                document.getElementById('welcomeUser').innerText = currentUser.nick;
+                updateStatusDisplay();
+                renderProposals();
+                renderReports();
+                renderHomeStatusList();
+            } else {
+                error.style.display = 'block';
+            }
+        };
+
+        // ========== STATUS ==========
+        window.toggleStatusPanel = function() {
+            const panel = document.getElementById('statusPanel');
+            panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
+        };
+
+        window.saveStatus = function() {
+            if (!currentUser) return;
+            const type = document.getElementById('statusType').value;
+            const from = document.getElementById('statusFrom').value;
+            const to = document.getElementById('statusTo').value;
+            statuses[currentUser.nick] = { type, from, to };
+            localStorage.setItem('xenioStatuses', JSON.stringify(statuses));
+            updateStatusDisplay();
+            renderHomeStatusList();
+            document.getElementById('statusPanel').style.display = 'none';
+        };
+
+        function updateStatusDisplay() {
+            if (!currentUser) return;
+            const status = statuses[currentUser.nick];
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('currentStatusText');
+            dot.className = 'status-dot';
+            if (status) {
+                const now = new Date();
+                const from = status.from ? new Date(status.from) : null;
+                const to = status.to ? new Date(status.to) : null;
+                let active = true;
+                if (from && now < from) active = false;
+                if (to && now > to) active = false;
+                if (!active) {
+                    text.innerHTML = '<span class="status-badge">Brak aktywnego statusu</span>';
+                    dot.classList.add('online');
+                } else {
+                    let label = '';
+                    if (status.type === 'czuwa') { label = 'W czuwaniu'; dot.classList.add('online'); }
+                    else if (status.type === 'pingi') { label = 'Dostępny na pingi'; dot.classList.add('away'); }
+                    else if (status.type === 'niedostepny') { label = 'Niedostępny'; dot.classList.add('dnd'); }
+                    text.innerHTML = `<span class="status-badge ${status.type}">${label}</span> ${status.from ? ' od '+status.from : ''} ${status.to ? ' do '+status.to : ''}`;
+                }
+            } else {
+                dot.classList.add('online');
+                text.innerHTML = '<span class="status-badge czuwa">Online</span>';
+            }
+        }
+
+        function renderHomeStatusList() {
+            const list = document.getElementById('homeStatusList');
+            if (!list) return;
+            const allUsers = Object.keys(users);
+            list.innerHTML = allUsers.map(nick => {
+                const s = statuses[nick];
+                let badgeClass = 'czuwa';
+                let label = 'Online';
+                if (s) {
+                    const now = new Date();
+                    const from = s.from ? new Date(s.from) : null;
+                    const to = s.to ? new Date(s.to) : null;
+                    let active = true;
+                    if (from && now < from) active = false;
+                    if (to && now > to) active = false;
+                    if (active) {
+                        if (s.type === 'czuwa') { badgeClass = 'czuwa'; label = 'W czuwaniu'; }
+                        else if (s.type === 'pingi') { badgeClass = 'pingi'; label = 'Dostępny na pingi'; }
+                        else if (s.type === 'niedostepny') { badgeClass = 'niedostepny'; label = 'Niedostępny'; }
+                    } else {
+                        badgeClass = '';
+                        label = 'Status nieaktywny';
+                    }
+                }
+                const role = users[nick].role;
+                let roleColor = '#fff';
+                if (role === 'kierownik') roleColor = 'var(--rank-kierownik)';
+                else if (role === 'admin') roleColor = 'var(--rank-admin)';
+                else if (role === 'mod') roleColor = 'var(--rank-mod)';
+                else if (role === 'helper') roleColor = 'var(--rank-helper)';
+                return `
+                    <div class="status-row">
+                        <div class="user">
+                            <span style="color: ${roleColor}; font-weight: 700;">${nick}</span>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">(${role})</span>
+                        </div>
+                        <span class="badge status-badge ${badgeClass}">${label}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== RAPORTY ==========
+        window.submitReport = function() {
+            if (!currentUser) return;
+            const accused = document.getElementById('reportAccused').value.trim();
+            const category = document.getElementById('reportCategory').value;
+            const desc = document.getElementById('reportDesc').value.trim();
+            if (!accused || !desc) return alert('Uzupełnij wszystkie pola');
+            reports.push({
+                reporter: currentUser.nick,
+                accused,
+                category,
+                desc,
+                time: new Date().toLocaleString()
+            });
+            localStorage.setItem('xenioReports', JSON.stringify(reports));
+            document.getElementById('reportAccused').value = '';
+            document.getElementById('reportDesc').value = '';
+            renderReports();
+        };
+
+        function renderReports() {
+            const tabsDiv = document.getElementById('reportTabs');
+            const listDiv = document.getElementById('reportList');
+            const reporters = [...new Set(reports.map(r => r.reporter))];
+            tabsDiv.innerHTML = `<span class="report-tab active" data-reporter="all" onclick="filterReports('all')">Wszyscy</span>`;
+            reporters.forEach(nick => {
+                tabsDiv.innerHTML += `<span class="report-tab" data-reporter="${nick}" onclick="filterReports('${nick}')">${nick}</span>`;
+            });
+            filterReports('all');
+        }
+
+        window.filterReports = function(reporter) {
+            document.querySelectorAll('.report-tab').forEach(tab => tab.classList.remove('active'));
+            const activeTab = document.querySelector(`.report-tab[data-reporter="${reporter}"]`);
+            if (activeTab) activeTab.classList.add('active');
+            const filtered = reporter === 'all' ? reports : reports.filter(r => r.reporter === reporter);
+            const listDiv = document.getElementById('reportList');
+            listDiv.innerHTML = filtered.map(r => `
+                <div class="report-item">
+                    <div class="report-meta"><span>Zgłaszający: ${r.reporter}</span><span>${r.time}</span></div>
+                    <div class="report-accused">Sprawca: ${r.accused} (${r.category})</div>
+                    <div style="color:#d1d5db;">${r.desc}</div>
+                </div>
+            `).join('') || '<p style="color:var(--text-secondary);">Brak raportów.</p>';
+        };
+
+        // ========== TAB SWITCHING ==========
         const tabs = document.querySelectorAll('.tab-content');
         const navItems = document.querySelectorAll('.nav-item');
         const sidebar = document.getElementById('sidebar');
         const menuToggle = document.getElementById('menuToggle');
 
-        function switchTab(tabId) {
+        window.switchTab = function(tabId) {
             tabs.forEach(t => t.classList.remove('active'));
             navItems.forEach(n => n.classList.remove('active'));
             const targetTab = document.getElementById(tabId);
@@ -1135,12 +1668,13 @@
             if (window.innerWidth <= 1100) {
                 sidebar.classList.remove('open');
             }
-        }
+            if (tabId === 'home') renderHomeStatusList();
+        };
 
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 const tabId = item.getAttribute('data-tab');
-                switchTab(tabId);
+                window.switchTab(tabId);
             });
         });
 
@@ -1153,6 +1687,45 @@
                 sidebar.classList.remove('open');
             }
         });
+
+        // ========== PROPOSALS ==========
+        window.addProposal = function() {
+            if (!currentUser) return;
+            const input = document.getElementById('proposalInput');
+            const text = input.value.trim();
+            if (!text) return;
+            proposals.push({
+                author: currentUser.nick,
+                role: currentUser.role,
+                content: text,
+                time: new Date().toLocaleString()
+            });
+            localStorage.setItem('xenioProposals', JSON.stringify(proposals));
+            input.value = '';
+            renderProposals();
+        };
+
+        window.deleteProposal = function(index) {
+            if (!currentUser || currentUser.nick !== 'Xenio') return;
+            proposals.splice(index, 1);
+            localStorage.setItem('xenioProposals', JSON.stringify(proposals));
+            renderProposals();
+        };
+
+        function renderProposals() {
+            const list = document.getElementById('proposalList');
+            if (!list) return;
+            list.innerHTML = proposals.map((p, i) => `
+                <div class="proposal-item ${p.role}">
+                    <div class="proposal-meta">
+                        <span class="proposal-author">${p.author} (${p.role})</span>
+                        <span>${p.time}</span>
+                    </div>
+                    <div class="proposal-content">${p.content}</div>
+                    ${currentUser && currentUser.nick === 'Xenio' ? `<button class="delete-btn" onclick="deleteProposal(${i})"><i class="fas fa-trash"></i></button>` : ''}
+                </div>
+            `).join('');
+        }
 
         // Animated counter
         const counterEl = document.querySelector('.num[data-count]');
